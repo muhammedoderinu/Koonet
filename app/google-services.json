@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "424050939011",
+    "project_id": "koonect-ce804",
+    "storage_bucket": "koonect-ce804.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424050939011:android:688f040546ea4c7d4c37b6",
+        "android_client_info": {
+          "package_name": "com.hfad.koonect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424050939011-f2lsccjsnhqbht539lu1qr38nj08vgqt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hfad.koonect",
+            "certificate_hash": "298c8215a95593c711ae0701d26ee1034891ec12"
+          }
+        },
+        {
+          "client_id": "424050939011-p52p3f77atsu2apmuckf02op6nu826us.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK6sizHFK9Rk26cWJAwjxpsPcP8NfbmP0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424050939011-p52p3f77atsu2apmuckf02op6nu826us.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
