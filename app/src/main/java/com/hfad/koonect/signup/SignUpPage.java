@@ -27,6 +27,7 @@ public class SignUpPage {
                            String phoneNumber, String userName){
 
         mAuth = FirebaseAuth.getInstance();
+        if(!userEmail.isEmpty()&&!userPassword.isEmpty())
         mAuth.createUserWithEmailAndPassword(userEmail, userPassword)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                     @Override

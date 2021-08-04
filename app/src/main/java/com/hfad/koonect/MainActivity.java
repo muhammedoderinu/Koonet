@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     Button loginButton;
     String userEmail;
     String userPassword;
+    TextInputEditText userEmailRaw;
+    TextInputEditText userPasswordRaw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +26,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         signUpLinkButton = findViewById(R.id.signUplink);
         loginButton = findViewById(R.id.logInButton);
-        TextInputEditText userEmailRaw = findViewById(R.id.emailInput);
-        userEmail =  userEmailRaw.getText().toString();
-        TextInputEditText userPasswordRaw = findViewById(R.id.passwordInput);
-        userPassword = userPasswordRaw.getText().toString();
+        userEmailRaw = findViewById(R.id.emailInput);
+        userPasswordRaw = findViewById(R.id.passwordInput);
+
 
 
         signUpLinkButton.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                userPassword = userPasswordRaw.getText().toString();
+                userEmail =  userEmailRaw.getText().toString();
                 LogInPage logInPage = new LogInPage();
                 logInPage.validateUser(MainActivity.this,getBaseContext(),
                                       userEmail,userPassword);
