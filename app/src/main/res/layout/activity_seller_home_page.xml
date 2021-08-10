@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="10dp"
         android:text="Upload sample images of your Product"/>
 
     </LinearLayout>
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:padding="5dp">
 
         <FrameLayout
@@ -121,6 +121,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/productName"
             android:layout_width="wrap_content"
@@ -128,12 +130,60 @@
             android:hint="Product Name"
             android:textColorHint="@color/pink" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
         <AutoCompleteTextView
             android:id="@+id/productCategory"
+            android:imeOptions="actionSearch"
+            android:inputType="textAutoComplete|textAutoCorrect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Product Category"
-            android:textColorHint="@color/pink" />
+            android:ems="10"
+            android:textColorHint="@color/pink" >
+            <requestFocus />
+        </AutoCompleteTextView>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="New Product"
+                    android:textColorHint="@color/pink"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Used Product"
+                    android:textColorHint="@color/pink"
+                    android:textSize="18sp" />
+
+            </RadioGroup>
+
+            <Button
+                android:id = "@+id/publishProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"
+                android:text="Publish"/>
+        </LinearLayout>
 
 
     </LinearLayout>
@@ -142,16 +192,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:text="Upload video to show product (Optional)"/>
 
         <FrameLayout
+            android:id="@+id/openDialog"
             android:layout_width="wrap_content"
             android:layout_gravity="center"
             android:layout_height="wrap_content">
@@ -170,12 +220,16 @@
         </FrameLayout>
 
         <Button
-            android:id = "@+id/publishProduct"
+            android:id = "@+id/publishVideo"
+            android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
+            android:layout_gravity="right"
             android:layout_marginEnd="10dp"
-            android:text="Publish"/>
+            android:text="Publish Video"/>
+
+
+
 
     </LinearLayout>
 

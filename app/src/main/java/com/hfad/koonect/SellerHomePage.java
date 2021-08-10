@@ -19,10 +19,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.hfad.koonect.database.SellerDatabase;
 import com.hfad.koonect.options.LogOut;
@@ -33,13 +38,17 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 
 public class SellerHomePage extends AppCompatActivity {
-    FrameLayout thumbnail1, thumbnail2, thumbnail3, thumbnail4;
+    FrameLayout thumbnail1, thumbnail2, thumbnail3, thumbnail4, openDialog;
     ActivityResultLauncher<Intent> somehActivityResultLauncher;
-    ActivityResultLauncher<Intent> somehActivityResultTwoLauncher;
+    ActivityResultLauncher<Intent> somehActivityResultTwoLauncher, someVideoActivityResultLauncher;
     ImageView imageOne, imageTwo, imageThree, imageFour;
     int imageOn;
     Button publishProduct;
-    TextView productNameRaw, productCategoryRaw;
+    TextView productNameRaw;
+    AutoCompleteTextView productCategoryRaw;
+    VideoView videoThumbnail;
+    String[] categories =  {"Mobile","Electronics","Kitchen","Automobile","Housing"};
+
 
 
     @Override
@@ -49,6 +58,7 @@ public class SellerHomePage extends AppCompatActivity {
         whichImageOn(0);
         onhActivityResult();
         onhActivityResultTwo();
+        onVideoResultActivity();
         publishProduct = findViewById(R.id.publishProduct);
         thumbnail1 = findViewById(R.id.thumbnail1);
         thumbnail2 = findViewById(R.id.thumbnail2);
@@ -59,9 +69,25 @@ public class SellerHomePage extends AppCompatActivity {
         imageThree = findViewById(R.id.imageThree);
         imageFour = findViewById(R.id.imageFour);
         productNameRaw = findViewById(R.id.productName);
-        productCategoryRaw = findViewById(R.id.productCategory);
+        productCategoryRaw = (AutoCompleteTextView)findViewById(R.id.productCategory);
+        videoThumbnail = findViewById(R.id.videoThumbnail);
+        openDialog = findViewById(R.id.openDialog);
 
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.select_dialog_item,categories);
+        productCategoryRaw.setThreshold(1);
+        productCategoryRaw.setAdapter(adapter);
+        if(!videoThumbnail.isPlaying()) {
+            openDialog.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("this is me", "onClick: ");
+                    HomePage homepage = new HomePage();
+                    homepage.videoSubscriptionPrompt(SellerHomePage.this, someVideoActivityResultLauncher);
+                }
+            });
+        }
 
         thumbnail1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -286,12 +312,14 @@ public class SellerHomePage extends AppCompatActivity {
                                         if(imageOn==1) {
                                             Picasso.get()
                                                     .load(picturePath)
+                                                    .fit()
                                                     .into(imageOne);
                                         }
 
                                         if(imageOn ==2) {
                                             Picasso.get()
                                                     .load(picturePath)
+                                                    .fit()
                                                     .into(imageTwo);
 
                                         }
@@ -299,6 +327,7 @@ public class SellerHomePage extends AppCompatActivity {
                                         if(imageOn ==3) {
                                             Picasso.get()
                                                     .load(picturePath)
+                                                    .fit()
                                                     .into(imageThree);
 
                                         }
@@ -310,6 +339,48 @@ public class SellerHomePage extends AppCompatActivity {
                                         }
                                     }
                                 });
+
+
+
+
+    }
+
+    public void onVideoResultActivity(){
+
+
+        someVideoActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        Log.d("oknowiammcalled", "onActivityResult: ");
+                        Intent data = result.getData();
+
+                        try
+                        {
+                            Toast.makeText(SellerHomePage.this,"hmnnn ", Toast.LENGTH_LONG)
+                                    .show();
+                            Uri path = data.getData();
+                            MediaController controller = new MediaController(SellerHomePage.this);
+                            controller.setAnchorView(SellerHomePage.this.videoThumbnail);
+                            controller.setMediaPlayer(videoThumbnail);
+                            videoThumbnail.setMediaController(controller);
+                            videoThumbnail.setVideoURI(path);
+                            videoThumbnail.requestFocus();
+                            videoThumbnail.start();
+                            if(videoThumbnail.isPlaying()) {
+                                openDialog.setEnabled(false);
+                            }
+
+
+                        }
+                        catch(Exception ex)
+                        {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                });
 
 
 
