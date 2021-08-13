@@ -25,10 +25,12 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.hfad.koonect.database.SellerDatabase;
 import com.hfad.koonect.options.LogOut;
 import com.hfad.koonect.options.SellerProfile;
@@ -36,17 +38,27 @@ import com.hfad.koonect.sellerhomepage.HomePage;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 public class SellerHomePage extends AppCompatActivity {
     FrameLayout thumbnail1, thumbnail2, thumbnail3, thumbnail4, openDialog;
     ActivityResultLauncher<Intent> somehActivityResultLauncher;
     ActivityResultLauncher<Intent> somehActivityResultTwoLauncher, someVideoActivityResultLauncher;
     ImageView imageOne, imageTwo, imageThree, imageFour;
+    SellerDatabase sellerDatabase;
     int imageOn;
     Button publishProduct;
-    TextView productNameRaw;
+    TextView productNameRaw, productPriceRaw;
     AutoCompleteTextView productCategoryRaw;
     VideoView videoThumbnail;
+    ArrayList<byte[]> bytesImage;
+    ArrayList<String> picNames;
+    RadioGroup radioGroup;
+    MaterialRadioButton oldProductButton;
+    MaterialRadioButton newProductButton;
+    boolean isVideo;
+    boolean oldProduct;
+    boolean newProduct;
     String[] categories =  {"Mobile","Electronics","Kitchen","Automobile","Housing"};
 
 
@@ -72,7 +84,13 @@ public class SellerHomePage extends AppCompatActivity {
         productCategoryRaw = (AutoCompleteTextView)findViewById(R.id.productCategory);
         videoThumbnail = findViewById(R.id.videoThumbnail);
         openDialog = findViewById(R.id.openDialog);
-
+        radioGroup = findViewById(R.id.radioGroup);
+        oldProductButton = findViewById(R.id.oldProductButton);
+        newProductButton = findViewById(R.id.newProductButton);
+        productPriceRaw = findViewById(R.id.productPrice);
+        bytesImage = new ArrayList<byte[]>();
+        picNames = new ArrayList<String>();
+        isVideo = false;
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.select_dialog_item,categories);
@@ -142,20 +160,52 @@ public class SellerHomePage extends AppCompatActivity {
             public void onClick(View v) {
                 String productName = productNameRaw.getText().toString();
                 String productCategory = productCategoryRaw.getText().toString();
-                SellerDatabase sellerDatabase = new SellerDatabase();
-                sellerDatabase.uploadProductInfo(productName,productCategory);
+                String productPrice = productPriceRaw.getText().toString();
+                Log.d("prodpri", productPrice);
                 byte[] thumbnailImage1 = getProfilePics(imageOne);
-                sellerDatabase.uploadThumbnailsToCloud(thumbnailImage1,"thumbnail1");
                 byte[] thumbnailImage2 = getProfilePics(imageTwo);
-                sellerDatabase.uploadThumbnailsToCloud(thumbnailImage2,"thumbnail2");
                 byte[] thumbnailImage3 = getProfilePics(imageThree);
-                sellerDatabase.uploadThumbnailsToCloud(thumbnailImage3,"thumbnail3");
                 byte[] thumbnailImage4 = getProfilePics(imageFour);
-                sellerDatabase.uploadThumbnailsToCloud(thumbnailImage4,"thumbnail4");
+                bytesImage.add(thumbnailImage1);
+                bytesImage.add(thumbnailImage2);
+                bytesImage.add(thumbnailImage3);
+                bytesImage.add(thumbnailImage4);
+                picNames.add("thumbnail1");
+                picNames.add("thumbnail2");
+                picNames.add("thumbnail3");
+                picNames.add("thumbnail4");
+                SellerDatabase sellerDatabase = new SellerDatabase();
+                sellerDatabase.uploadThumbnailsToCloud(bytesImage,picNames,productName,
+                        productCategory,productPrice,isVideo,oldProduct,newProduct);
+
+
+
+
+            }
+        });
+         radioGroup.clearCheck();
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
 
             }
         });
 
+        oldProductButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                oldProduct = true;
+                newProduct = false;
+            }
+        });
+
+        newProductButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newProduct = true;
+                oldProduct = false;
+            }
+        });
 
 
 
@@ -255,9 +305,6 @@ public class SellerHomePage extends AppCompatActivity {
                                 }
 
 
-
-
-
                             } else {
                                 try {
                                     Bitmap bitmap = MediaStore.Images.Media.getBitmap
@@ -299,43 +346,45 @@ public class SellerHomePage extends AppCompatActivity {
                                     @Override
                                     public void onActivityResult(ActivityResult result) {
                                         Intent data = result.getData();
-                                        Uri selectedImage = data.getData();
-                                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                                        if(data!=null) {
+                                            Uri selectedImage = data.getData();
+                                            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-                                        Cursor cursor = getContentResolver().query(selectedImage,
-                                                filePathColumn, null, null, null);
-                                        cursor.moveToFirst();
-                                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                                        String picturePath = cursor.getString(columnIndex);
-                                        cursor.close();
+                                            Cursor cursor = getContentResolver().query(selectedImage,
+                                                    filePathColumn, null, null, null);
+                                            cursor.moveToFirst();
+                                            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                                            String picturePath = cursor.getString(columnIndex);
+                                            cursor.close();
 
-                                        if(imageOn==1) {
-                                            Picasso.get()
-                                                    .load(picturePath)
-                                                    .fit()
-                                                    .into(imageOne);
-                                        }
+                                            if (imageOn == 1) {
+                                                Picasso.get()
+                                                        .load(picturePath)
+                                                        .fit()
+                                                        .into(imageOne);
+                                            }
 
-                                        if(imageOn ==2) {
-                                            Picasso.get()
-                                                    .load(picturePath)
-                                                    .fit()
-                                                    .into(imageTwo);
+                                            if (imageOn == 2) {
+                                                Picasso.get()
+                                                        .load(picturePath)
+                                                        .fit()
+                                                        .into(imageTwo);
 
-                                        }
+                                            }
 
-                                        if(imageOn ==3) {
-                                            Picasso.get()
-                                                    .load(picturePath)
-                                                    .fit()
-                                                    .into(imageThree);
+                                            if (imageOn == 3) {
+                                                Picasso.get()
+                                                        .load(picturePath)
+                                                        .fit()
+                                                        .into(imageThree);
 
-                                        }
-                                        if(imageOn ==4) {
-                                            Picasso.get()
-                                                    .load(picturePath)
-                                                    .into(imageFour);
+                                            }
+                                            if (imageOn == 4) {
+                                                Picasso.get()
+                                                        .load(picturePath)
+                                                        .into(imageFour);
 
+                                            }
                                         }
                                     }
                                 });

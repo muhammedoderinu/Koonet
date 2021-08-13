@@ -127,7 +127,7 @@
             android:id="@+id/productName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Product Name"
+            android:hint="Name"
             android:textColorHint="@color/pink" />
 
         <LinearLayout
@@ -135,17 +135,27 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-        <AutoCompleteTextView
-            android:id="@+id/productCategory"
-            android:imeOptions="actionSearch"
-            android:inputType="textAutoComplete|textAutoCorrect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Product Category"
-            android:ems="10"
-            android:textColorHint="@color/pink" >
-            <requestFocus />
-        </AutoCompleteTextView>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/productPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint=" Price"
+                android:textColorHint="@color/pink" />
+
+            <AutoCompleteTextView
+                android:id="@+id/productCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:ems="10"
+                android:hint=" Category"
+                android:imeOptions="actionSearch"
+                android:inputType="textAutoComplete|textAutoCorrect"
+                android:textColorHint="@color/pink">
+
+                <requestFocus />
+            </AutoCompleteTextView>
 
 
         </LinearLayout>
@@ -155,34 +165,37 @@
             android:orientation="horizontal">
 
             <RadioGroup
+                android:id = "@+id/radioGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id = "@+id/newProductButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="New Product"
+                    android:hint="New"
                     android:textColorHint="@color/pink"
                     android:textSize="18sp" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id = "@+id/oldProductButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="Used Product"
+                    android:hint="Used"
                     android:textColorHint="@color/pink"
                     android:textSize="18sp" />
 
             </RadioGroup>
 
             <Button
-                android:id = "@+id/publishProduct"
+                android:id="@+id/publishProduct"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_gravity="right"
+                android:layout_marginStart="100dp"
                 android:layout_marginEnd="10dp"
-                android:text="Publish"/>
+                android:text="Publish" />
         </LinearLayout>
 
 
